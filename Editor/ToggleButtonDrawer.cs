@@ -55,8 +55,8 @@ namespace UnityEssentials
             GUIContent icon = EditorGUIUtility.IconContent(iconName);
             icon.tooltip = GetTooltip(property);
 
-            float x = position.x + EditorGUIUtility.labelWidth + 1;
-            Rect buttonRect = new(x, position.y, ButtonWidth + 2, ButtonHeight + 2);
+            float xOffset = position.x + EditorGUIUtility.labelWidth + 1;
+            Rect buttonRect = new(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
             bool newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
             if (newValue != property.boolValue)
                 property.boolValue = newValue;
@@ -67,13 +67,13 @@ namespace UnityEssentials
             Rect labelRect = new(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
             EditorGUI.LabelField(labelRect, label);
 
-            float x = position.x + EditorGUIUtility.labelWidth + 1;
+            float xOffset = position.x + EditorGUIUtility.labelWidth + 1;
             foreach (var property in properties)
             {
                 var attribute = GetAttribute(property);
                 if (attribute == null) continue;
 
-                Rect buttonRect = new(x, position.y, ButtonWidth + 2, ButtonHeight + 2);
+                Rect buttonRect = new(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
                 GUIContent icon = EditorGUIUtility.IconContent(attribute.IconName);
                 icon.tooltip = GetTooltip(property);
 
@@ -81,7 +81,7 @@ namespace UnityEssentials
                 if (newValue != property.boolValue)
                     property.boolValue = newValue;
 
-                x += ButtonWidth + 4;
+                xOffset += ButtonWidth + 4;
             }
         }
 
