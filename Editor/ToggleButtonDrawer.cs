@@ -51,22 +51,21 @@ namespace UnityEssentials
         private void DrawSingleButton(Rect position, SerializedProperty property, string label, string iconName)
         {
             Rect labelRect = new(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-            Rect buttonRect = new(position.x + EditorGUIUtility.labelWidth, position.y, ButtonWidth + 2, ButtonHeight + 2);
-
-            EditorGUI.LabelField(labelRect, label);
+            EditorGUI.LabelField(labelRect, label, EditorStyles.whiteLabel);
 
             GUIContent icon = EditorGUIUtility.IconContent(iconName);
             icon.tooltip = GetTooltip(property);
 
+            Rect buttonRect = new(position.x + EditorGUIUtility.labelWidth, position.y, ButtonWidth + 2, ButtonHeight + 2);
             bool newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
             if (newValue != property.boolValue)
                 property.boolValue = newValue;
         }
-        bool _test;
+
         private void DrawGroupedButtons(Rect position, string label, List<SerializedProperty> properties)
         {
             Rect labelRect = new(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(labelRect, label);
+            EditorGUI.LabelField(labelRect, label, EditorStyles.whiteLabel);
 
             float x = position.x + EditorGUIUtility.labelWidth;
             foreach (var property in properties)
