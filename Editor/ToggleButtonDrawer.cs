@@ -50,7 +50,7 @@ namespace UnityEssentials
         private void DrawSingleButton(Rect position, SerializedProperty property, string label, string iconName)
         {
             Rect labelRect = new(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(labelRect, label, GetLabelStyle());
+            EditorGUI.LabelField(labelRect, label);
 
             GUIContent icon = EditorGUIUtility.IconContent(iconName);
             icon.tooltip = GetTooltip(property);
@@ -65,7 +65,7 @@ namespace UnityEssentials
         private void DrawGroupedButtons(Rect position, string label, List<SerializedProperty> properties)
         {
             Rect labelRect = new(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(labelRect, label, GetLabelStyle());
+            EditorGUI.LabelField(labelRect, label);
 
             float x = position.x + EditorGUIUtility.labelWidth + 1;
             foreach (var property in properties)
@@ -113,10 +113,6 @@ namespace UnityEssentials
             var tooltip = field?.GetCustomAttribute<TooltipAttribute>();
             return tooltip?.tooltip ?? ObjectNames.NicifyVariableName(property.name);
         }
-
-        GUIStyle _labelStyle;
-        private GUIStyle GetLabelStyle() =>
-            _labelStyle ??= new GUIStyle(EditorStyles.label) { fontSize = 12, normal = { textColor = new Color(0.85f, 0.85f, 0.85f) },  };
     }
 }
 #endif
