@@ -1,0 +1,17 @@
+{
+    "name": "UnityEssentials.ToggleButtonAttribute.Editor",
+    "rootNamespace": "UnityEssentials",
+    "references": [
+        "GUID:f054f0258fed7844e9dada987e3e00a4",
+        "GUID:40ccf8ace799d954991e3c03c59c44ee"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
