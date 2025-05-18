@@ -22,7 +22,7 @@ namespace UnityEssentials
                 return;
             }
 
-            var attribute = (ToggleButtonAttribute)base.attribute;
+            var attribute = this.attribute as ToggleButtonAttribute;
             string group = attribute.GroupName ?? property.name;
 
             if (attribute.GroupName == null)
