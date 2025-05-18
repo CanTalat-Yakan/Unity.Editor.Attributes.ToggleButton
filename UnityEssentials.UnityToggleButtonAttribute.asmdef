@@ -1,0 +1,16 @@
+{
+    "name": "UnityEssentials.UnityToggleButtonAttribute",
+    "rootNamespace": "UnityEssentials",
+    "references": [
+        "GUID:f054f0258fed7844e9dada987e3e00a4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
