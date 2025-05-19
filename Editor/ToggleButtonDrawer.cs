@@ -31,18 +31,18 @@ namespace UnityEssentials
             }
             else
             {
-                var groupProperties = new List<SerializedProperty>(); 
+                var groupProperties = new List<SerializedProperty>();
                 InspectorHookUtilities.IterateProperties((property) =>
                 {
-                    InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute);
-                    if (attribute != null && (attribute.GroupName ?? property.name) == group)
-                        groupProperties.Add(property.Copy());
+                    if (InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute))
+                        if ((attribute.GroupName ?? property.name) == group)
+                            groupProperties.Add(property.Copy());
                 });
-                if (groupProperties.Count == 0) 
+                if (groupProperties.Count == 0)
                     return;
 
                 _requiresHeightAdjustment = property.propertyPath == groupProperties[0].propertyPath;
-                if (!_requiresHeightAdjustment) 
+                if (!_requiresHeightAdjustment)
                     return;
 
                 DrawGroupedButtons(position, group, groupProperties);
@@ -55,13 +55,17 @@ namespace UnityEssentials
 
         private void DrawSingleButton(Rect position, SerializedProperty property, string label, string iconName)
         {
-            var labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(labelRect, label);
+            if (!string.IsNullOrEmpty(label))
+            {
+                var labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
+                EditorGUI.LabelField(labelRect, label);
+                position.x += EditorGUIUtility.labelWidth + 1;
+            }
 
             var icon = EditorGUIUtility.IconContent(iconName);
             icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
-            var xOffset = position.x + EditorGUIUtility.labelWidth + 1;
+            var xOffset = position.x;
             var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
             var newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
             if (newValue != property.boolValue)
@@ -76,7 +80,7 @@ namespace UnityEssentials
             var xOffset = position.x + EditorGUIUtility.labelWidth + 1;
             foreach (var property in properties)
             {
-                if (InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute)) 
+                if (InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute))
                     continue;
 
                 var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
