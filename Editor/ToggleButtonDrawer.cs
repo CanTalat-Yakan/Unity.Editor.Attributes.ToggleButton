@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +11,7 @@ namespace UnityEssentials
         private const float ButtonWidth = 32;
         private const float ButtonHeight = 20;
 
-        private bool _hasHeight;
+        private bool _requiresHeightAdjustment;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -23,95 +22,73 @@ namespace UnityEssentials
             }
 
             var attribute = this.attribute as ToggleButtonAttribute;
-            string group = attribute.GroupName ?? property.name;
+            var group = attribute.GroupName ?? property.name;
 
             if (attribute.GroupName == null)
             {
                 DrawSingleButton(position, property, label.text, attribute.IconName);
-                _hasHeight = true;
+                _requiresHeightAdjustment = true;
             }
             else
             {
-                var groupProps = FindGroupedProperties(property.serializedObject, group);
-                if (groupProps.Count == 0) return;
+                var groupProperties = new List<SerializedProperty>(); 
+                InspectorHookUtilities.IterateProperties((property) =>
+                {
+                    InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute);
+                    if (attribute != null && (attribute.GroupName ?? property.name) == group)
+                        groupProperties.Add(property.Copy());
+                });
+                if (groupProperties.Count == 0) 
+                    return;
 
-                _hasHeight = property.propertyPath == groupProps[0].propertyPath;
-                if (!_hasHeight) return;
+                _requiresHeightAdjustment = property.propertyPath == groupProperties[0].propertyPath;
+                if (!_requiresHeightAdjustment) 
+                    return;
 
-                DrawGroupedButtons(position, group, groupProps);
+                DrawGroupedButtons(position, group, groupProperties);
             }
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) =>
-            _hasHeight
-                ? EditorGUIUtility.singleLineHeight + Mathf.Max(0, ButtonHeight - EditorGUIUtility.singleLineHeight + 2)
-                : 0;
+            _requiresHeightAdjustment
+                ? EditorGUIUtility.singleLineHeight + Mathf.Max(0, ButtonHeight - EditorGUIUtility.singleLineHeight + 2) : 0;
 
         private void DrawSingleButton(Rect position, SerializedProperty property, string label, string iconName)
         {
-            Rect labelRect = new(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
+            var labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
             EditorGUI.LabelField(labelRect, label);
 
-            GUIContent icon = EditorGUIUtility.IconContent(iconName);
-            icon.tooltip = GetTooltip(property);
+            var icon = EditorGUIUtility.IconContent(iconName);
+            icon.tooltip = InspectorHookUtilities.GetTooltip(property);
 
-            float xOffset = position.x + EditorGUIUtility.labelWidth + 1;
-            Rect buttonRect = new(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
-            bool newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
+            var xOffset = position.x + EditorGUIUtility.labelWidth + 1;
+            var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
+            var newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
             if (newValue != property.boolValue)
                 property.boolValue = newValue;
         }
 
         private void DrawGroupedButtons(Rect position, string label, List<SerializedProperty> properties)
         {
-            Rect labelRect = new(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
+            var labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
             EditorGUI.LabelField(labelRect, label);
 
-            float xOffset = position.x + EditorGUIUtility.labelWidth + 1;
+            var xOffset = position.x + EditorGUIUtility.labelWidth + 1;
             foreach (var property in properties)
             {
-                var attribute = GetAttribute(property);
-                if (attribute == null) continue;
+                if (InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute)) 
+                    continue;
 
-                Rect buttonRect = new(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
-                GUIContent icon = EditorGUIUtility.IconContent(attribute.IconName);
-                icon.tooltip = GetTooltip(property);
+                var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
+                var icon = EditorGUIUtility.IconContent(attribute.IconName);
+                icon.tooltip = InspectorHookUtilities.GetTooltip(property);
 
-                bool newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
+                var newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
                 if (newValue != property.boolValue)
                     property.boolValue = newValue;
 
                 xOffset += ButtonWidth + 4;
             }
-        }
-
-        private List<SerializedProperty> FindGroupedProperties(SerializedObject obj, string group)
-        {
-            List<SerializedProperty> result = new();
-            SerializedProperty iterator = obj.GetIterator();
-            iterator.NextVisible(true);
-
-            while (iterator.NextVisible(false))
-            {
-                var attribute = GetAttribute(iterator);
-                if (attribute != null && (attribute.GroupName ?? iterator.name) == group)
-                    result.Add(iterator.Copy());
-            }
-
-            return result;
-        }
-
-        private ToggleButtonAttribute GetAttribute(SerializedProperty property)
-        {
-            var field = fieldInfo.DeclaringType.GetField(property.name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            return field?.GetCustomAttribute<ToggleButtonAttribute>();
-        }
-
-        private string GetTooltip(SerializedProperty property)
-        {
-            var field = fieldInfo.DeclaringType.GetField(property.name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            var tooltip = field?.GetCustomAttribute<TooltipAttribute>();
-            return tooltip?.tooltip ?? ObjectNames.NicifyVariableName(property.name);
         }
     }
 }
