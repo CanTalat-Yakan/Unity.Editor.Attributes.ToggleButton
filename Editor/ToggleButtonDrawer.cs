@@ -59,7 +59,7 @@ namespace UnityEssentials
             EditorGUI.LabelField(labelRect, label);
 
             var icon = EditorGUIUtility.IconContent(iconName);
-            icon.tooltip = InspectorHookUtilities.GetTooltip(property);
+            icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
             var xOffset = position.x + EditorGUIUtility.labelWidth + 1;
             var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
@@ -81,7 +81,7 @@ namespace UnityEssentials
 
                 var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
                 var icon = EditorGUIUtility.IconContent(attribute.IconName);
-                icon.tooltip = InspectorHookUtilities.GetTooltip(property);
+                icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
                 var newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
                 if (newValue != property.boolValue)
