@@ -21,6 +21,8 @@ namespace UnityEssentials
                 return;
             }
 
+            InspectorHook.MarkPropertyAsHandled(property.propertyPath);
+
             var attribute = this.attribute as ToggleButtonAttribute;
             var group = attribute.GroupName ?? property.name;
 
@@ -80,7 +82,7 @@ namespace UnityEssentials
             var xOffset = position.x + EditorGUIUtility.labelWidth + 1;
             foreach (var property in properties)
             {
-                if (InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute))
+                if (!InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute))
                     continue;
 
                 var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
