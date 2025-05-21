@@ -59,8 +59,8 @@ namespace UnityEssentials
         {
             if (!string.IsNullOrEmpty(label))
             {
-                var labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-                EditorGUI.LabelField(labelRect, label);
+                var labelPosition = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
+                EditorGUI.LabelField(labelPosition, label);
                 position.x += EditorGUIUtility.labelWidth + 1;
             }
 
@@ -68,16 +68,16 @@ namespace UnityEssentials
             icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
             var xOffset = position.x;
-            var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
-            var newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
+            var buttonPosition= new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
+            var newValue = GUI.Toggle(buttonPosition, property.boolValue, icon, "Button");
             if (newValue != property.boolValue)
                 property.boolValue = newValue;
         }
 
         private void DrawGroupedButtons(Rect position, string label, List<SerializedProperty> properties)
         {
-            var labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(labelRect, label);
+            var labelPosition = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
+            EditorGUI.LabelField(labelPosition, label);
 
             var xOffset = position.x + EditorGUIUtility.labelWidth + 1;
             foreach (var property in properties)
@@ -85,11 +85,11 @@ namespace UnityEssentials
                 if (!InspectorHookUtilities.TryGetAttribute<ToggleButtonAttribute>(property, out var attribute))
                     continue;
 
-                var buttonRect = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
+                var buttonPosition = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
                 var icon = EditorGUIUtility.IconContent(attribute.IconName);
                 icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
-                var newValue = GUI.Toggle(buttonRect, property.boolValue, icon, "Button");
+                var newValue = GUI.Toggle(buttonPosition, property.boolValue, icon, "Button");
                 if (newValue != property.boolValue)
                     property.boolValue = newValue;
 
