@@ -52,8 +52,7 @@ namespace UnityEssentials
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) =>
-            _requiresHeightAdjustment
-                ? EditorGUIUtility.singleLineHeight + Mathf.Max(0, ButtonHeight - EditorGUIUtility.singleLineHeight + 2) : 0;
+            _requiresHeightAdjustment ? EditorGUIUtility.singleLineHeight + Mathf.Max(0, ButtonHeight - EditorGUIUtility.singleLineHeight + 2) : 0;
 
         private void DrawSingleButton(Rect position, SerializedProperty property, string label, string iconName)
         {
