@@ -21,8 +21,6 @@ namespace UnityEssentials
                 return;
             }
 
-            InspectorHook.MarkPropertyAsHandled(property.propertyPath);
-
             var attribute = this.attribute as ToggleButtonAttribute;
             var group = attribute.GroupName ?? property.name;
 
