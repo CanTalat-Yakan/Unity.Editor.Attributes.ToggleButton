@@ -1,3 +1,4 @@
+//https://discussions.unity.com/t/property-drawer-for-enum-flags-masks-download/691923/14
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
@@ -65,10 +66,12 @@ namespace UnityEssentials
             icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
             var xOffset = position.x;
-            var buttonPosition= new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
+            var buttonPosition = new Rect(xOffset, position.y, ButtonWidth + 2, ButtonHeight + 2);
             var newValue = GUI.Toggle(buttonPosition, property.boolValue, icon, "Button");
-            if (newValue != property.boolValue)
-                property.boolValue = newValue;
+            if (InspectorFocusedHelper.ProcessKeyboardClick(buttonPosition))
+                newValue = !newValue;
+            property.boolValue = newValue;
+            property.serializedObject.ApplyModifiedProperties();
         }
 
         private void DrawGroupedButtons(Rect position, string label, List<SerializedProperty> properties)
@@ -87,8 +90,10 @@ namespace UnityEssentials
                 icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
                 var newValue = GUI.Toggle(buttonPosition, property.boolValue, icon, "Button");
-                if (newValue != property.boolValue)
-                    property.boolValue = newValue;
+                if (InspectorFocusedHelper.ProcessKeyboardClick(buttonPosition))
+                    newValue = !newValue;
+                property.boolValue = newValue;
+                property.serializedObject.ApplyModifiedProperties();
 
                 xOffset += ButtonWidth + 4;
             }
