@@ -17,7 +17,7 @@ namespace UnityEssentials
         {
             if (property.propertyType != SerializedPropertyType.Boolean)
             {
-                EditorGUI.LabelField(position, label.text, "Use ToggleButton with bool only.");
+                EditorGUI.HelpBox(position, "ToggleButton attribute only supports bool fields.", MessageType.Error);
                 return;
             }
 
