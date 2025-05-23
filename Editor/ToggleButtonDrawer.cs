@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace UnityEssentials
 {
+    /// <summary>
+    /// Provides a custom property drawer for fields decorated with the <see cref="ToggleButtonAttribute"/>.
+    /// </summary>
+    /// <remarks>This drawer renders a toggle button in the Unity Inspector for boolean fields. If the <see
+    /// cref="ToggleButtonAttribute"/> specifies a group name, it renders grouped toggle buttons for all fields in the
+    /// same group. The drawer supports optional icons and tooltips for the buttons.</remarks>
     [CustomPropertyDrawer(typeof(ToggleButtonAttribute))]
     public class ToggleButtonDrawer : PropertyDrawer
     {
@@ -14,6 +20,17 @@ namespace UnityEssentials
 
         private bool _requiresHeightAdjustment;
 
+        /// <summary>
+        /// Renders a custom toggle button in the Unity Inspector for a serialized boolean property.
+        /// </summary>
+        /// <remarks>This method supports both standalone toggle buttons and grouped toggle buttons. If
+        /// the <c>ToggleButtonAttribute</c> specifies a group name, all properties in the same group will be rendered
+        /// as a set of grouped buttons. Otherwise, a single toggle button is rendered for the property. <para> If the
+        /// property is not of type <see cref="SerializedPropertyType.Boolean"/>, an error message is displayed in the
+        /// Inspector. </para></remarks>
+        /// <param name="position">The rectangle on the screen to use for the property GUI.</param>
+        /// <param name="property">The serialized property being drawn. Must be of type <see cref="SerializedPropertyType.Boolean"/>.</param>
+        /// <param name="label">The label to display alongside the property in the Inspector.</param>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType != SerializedPropertyType.Boolean)
@@ -50,9 +67,27 @@ namespace UnityEssentials
             }
         }
 
+        /// <summary>
+        /// Calculates the height required to render the property in the editor, including any additional space for
+        /// custom UI elements.
+        /// </summary>
+        /// <param name="property">The serialized property for which the height is being calculated.</param>
+        /// <param name="label">The label associated with the property, typically displayed in the editor.</param>
+        /// <returns>The height, in pixels, required to render the property. Returns <see langword="0"/> if no height adjustment
+        /// is needed.</returns>
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) =>
             _requiresHeightAdjustment ? EditorGUIUtility.singleLineHeight + Mathf.Max(0, ButtonHeight - EditorGUIUtility.singleLineHeight + 2) : 0;
 
+        /// <summary>
+        /// Renders a single button with an optional label and icon in the Unity Inspector.
+        /// </summary>
+        /// <remarks>The button toggles the value of the specified boolean property. If a label is
+        /// provided, it is displayed to the left of the button. The icon, if specified, is displayed on the button, and
+        /// its tooltip is derived from the property's tooltip.</remarks>
+        /// <param name="position">The screen position and size of the button, including the label if specified.</param>
+        /// <param name="property">The serialized boolean property that the button toggles.</param>
+        /// <param name="label">The optional label to display next to the button. Can be <see langword="null"/> or empty to omit the label.</param>
+        /// <param name="iconName">The name of the icon to display on the button. Can be <see langword="null"/> or empty to omit the icon.</param>
         private void DrawSingleButton(Rect position, SerializedProperty property, string label, string iconName)
         {
             if (!string.IsNullOrEmpty(label))
@@ -74,6 +109,16 @@ namespace UnityEssentials
             property.serializedObject.ApplyModifiedProperties();
         }
 
+        /// <summary>
+        /// Draws a group of toggle buttons within the specified position, each corresponding to a serialized property.
+        /// </summary>
+        /// <remarks>Each button is rendered with an icon specified by the <see
+        /// cref="ToggleButtonAttribute"/> applied to the property. Clicking a button toggles the associated property's
+        /// boolean value. Keyboard interactions are also supported for toggling.</remarks>
+        /// <param name="position">The rectangular area on the screen where the buttons will be drawn.</param>
+        /// <param name="label">The label displayed to the left of the group of buttons.</param>
+        /// <param name="properties">A list of <see cref="SerializedProperty"/> objects, each representing a property to be displayed as a toggle
+        /// button. Only properties with a <see cref="ToggleButtonAttribute"/> will be rendered.</param>
         private void DrawGroupedButtons(Rect position, string label, List<SerializedProperty> properties)
         {
             var labelPosition = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
