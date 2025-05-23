@@ -28,9 +28,6 @@ namespace UnityEssentials
         /// as a set of grouped buttons. Otherwise, a single toggle button is rendered for the property. <para> If the
         /// property is not of type <see cref="SerializedPropertyType.Boolean"/>, an error message is displayed in the
         /// Inspector. </para></remarks>
-        /// <param name="position">The rectangle on the screen to use for the property GUI.</param>
-        /// <param name="property">The serialized property being drawn. Must be of type <see cref="SerializedPropertyType.Boolean"/>.</param>
-        /// <param name="label">The label to display alongside the property in the Inspector.</param>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (property.propertyType != SerializedPropertyType.Boolean)
