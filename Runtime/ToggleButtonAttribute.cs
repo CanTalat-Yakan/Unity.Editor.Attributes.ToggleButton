@@ -22,9 +22,9 @@ namespace UnityEssentials
             GroupName = groupName;
         }
 
-        public ToggleButtonAttribute(IconNames iconName, string groupName = null)
+        public ToggleButtonAttribute(EditorIconNames iconName, string groupName = null)
         {
-            IconName = Icon.GetIconReferenceByName(iconName);
+            IconName = EditorIcons.GetIconReferenceByName(iconName);
             GroupName = groupName;
         }
     }
