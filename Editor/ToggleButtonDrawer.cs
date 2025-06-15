@@ -98,7 +98,7 @@ namespace UnityEssentials
             icon.tooltip = InspectorHookUtilities.GetToolTip(property);
 
             var buttonPosition = new Rect(position.x, position.y, ButtonWidth + 2, ButtonHeight + 2);
-            var newValue = GUI.Toggle(buttonPosition, property.boolValue, icon, "Button");
+            bool newValue = GUI.Toggle(buttonPosition, property.boolValue, icon, "Button");
             if (InspectorFocusHelper.ProcessKeyboardClick(buttonPosition))
                 newValue = !newValue;
 
