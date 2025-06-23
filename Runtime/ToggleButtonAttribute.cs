@@ -24,7 +24,7 @@ namespace UnityEssentials
 
         public ToggleButtonAttribute(EditorIconNames iconName, string groupName = null)
         {
-            IconName = EditorIconUtilities.GetIconReferenceByName(iconName);
+            IconName = EditorIconUtilities.GetReferenceByName(iconName);
             GroupName = groupName;
         }
     }
