@@ -1,4 +1,3 @@
-//https://discussions.unity.com/t/property-drawer-for-enum-flags-masks-download/691923/14
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
